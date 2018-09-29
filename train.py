@@ -32,7 +32,7 @@ def train_model(X, y, model_type, cv_fold=5):
     """
     # a grid of hyperparameters from which to search for an optimal combination
     param_grid = {
-        'alpha': [0.01, 0.001,0.0001, 0.00001],
+        'alpha': [0.1, 0.05, 0.01, 0.005, 0.001,0.0001, 0.00001],
         'hidden_layer_sizes': [(8,), (16,), (32,), (64,)],
         'momentum': np.arange(0.1, 1.0, 0.1)
     }
@@ -82,11 +82,11 @@ def train_dropout_nn(X, y, model_type='classifier', cv_fold=5):
     """
     # a grid of hyperparameters from which to search for an optimal combination
     param_grid = {
-        'weight_decay': [0.01, 0.001],
+        'weight_decay': [0.05, 0.01, 0.005, 0.001],
         'dropout_rate': [0.25, 0.50],
-        'learning_momentum': [0.8],
-        'learning_rate': [0.01],
-        'hidden0__units': [16, 32, 64],
+        'learning_momentum': np.arange(0.1, 1.0, 0.3),
+        'learning_rate': [0.05, 0.01, 0.005, 0.001],
+        'hidden0__units': [8, 16, 32, 64],
         'hidden0__dropout': [0.25, 0.50]
     }
 
