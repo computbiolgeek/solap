@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
-
-import pandas as pd
 import numpy as np
+from argparse import ArgumentParser
 import random
 import utils
 
@@ -64,16 +63,22 @@ class KMeans:
         """
         # choose k random points as the initial means
         self.means = random.sample(inputs, self.k)
-
         assignments = None
-
         while True:
+            # assign each point to a cluster
             new_assignments = [self._classify(v) for v in inputs]
+            # if no assignments have changed, we're done
             if assignments == new_assignments:
                 break
+            # otherwise, keep new assignments and update the means
             assignments = new_assignments
-
-        # update the means
+            clusters = [[] for _ in self.k]
+            for i, j in enumerate(assignments):
+                clusters[j].append(inputs[i])
+            for i, c in enumerate(clusters):
+                if c:
+                    self.means[i] = utils.vector_mean(c)
+        return assignments
 
     def _classify(self, input):
         """
@@ -90,6 +95,24 @@ class KMeans:
         _, min_idx = min((dist, i) for i, dist in enumerate(sq_distances))
         return min_idx
 
+
+def parse_cmd_args():
+    """
+
+    Returns
+    -------
+
+    """
+    parser = ArgumentParser(description='K-Means clustering.')
+    parser.add_argument('--input', '-i', dest='input', required=True,
+                        type=str, help='Input points.')
+    parser.add_argument('--output', '-o', dest='output', required=True,
+                        type=str, help='Cluster assignments.')
+    parser.add_argument('--k', '-k', dest='k', required=True, type=int,
+                        help='The number of clusters.')
+    return parser.parse_args()
+
+
 def main():
     """
 
@@ -98,8 +121,8 @@ def main():
 
     """
     args = parse_cmd_args()
-
-    X = pd.read_csv(filepath_or_buffer=args.X, header=None)
-    y = pd.read_csv(filepath_or_buffer=args.y, header=None)
-
-    final_model = train_model()
+    points = np.loadtxt(args.input, delimiter=',')
+    k_means = KMeans(k=args.k)
+    assignments = k_means.train(points)
+    with open(args.output, 'wt') as opf:
+        opf.writelines('%s\n' % a for a in assignments)

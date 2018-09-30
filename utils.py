@@ -2,6 +2,7 @@
 
 import math
 
+
 def vector_add(v, w):
     """
 
