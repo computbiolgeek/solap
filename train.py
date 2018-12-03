@@ -32,7 +32,7 @@ def train_model(X, y, model_type, cv_fold=5):
     """
     # a grid of hyperparameters from which to search for an optimal combination
     param_grid = {
-        'alpha': [0.1, 0.05, 0.01, 0.005, 0.001,0.0001, 0.00001],
+        'alpha': [0.1, 0.05, 0.01, 0.005, 0.001, 0.0001, 0.00001],
         'hidden_layer_sizes': [(8,), (16,), (32,), (64,)],
         'momentum': np.arange(0.1, 1.0, 0.1)
     }
